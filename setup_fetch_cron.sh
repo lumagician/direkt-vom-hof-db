@@ -35,24 +35,16 @@ else
 fi
 deactivate
 
-# === STEP 3: CREATE WRAPPER SCRIPT ===
-WRAPPER="$HOME/run_fetch.sh"
-cat <<EOF > "$WRAPPER"
-#!/bin/bash
-cd "$REPO_DIR"
-source "$VENV_DIR/bin/activate"
-git pull
-python3 "$PYTHON_SCRIPT"
-git add .
-git commit -m "Automated update from fetch.py on \$(date)"
-git push
-deactivate
-EOF
+# === STEP 3: ADD CRON JOB TO RUN FETCH.PY IN VENV ===
+# Use full path to python in the venv
+VENV_PYTHON="$VENV_DIR/bin/python"
+CRON_CMD="cd $REPO_DIR && git pull && $VENV_PYTHON $PYTHON_SCRIPT && git add . && git commit -m 'Auto update on \$(date)' && git push"
 
-chmod +x "$WRAPPER"
+# Escape percent signs in cron
+ESCAPED_CMD=$(echo "$CRON_CMD" | sed 's/%/\\%/g')
+CRON_ENTRY="59 59 * * * $ESCAPED_CMD >> $LOG_FILE 2>&1"
 
-# === STEP 4: ADD CRON JOB ===
-CRON_ENTRY="59 * * * * $WRAPPER >> $LOG_FILE 2>&1"
-( crontab -l 2>/dev/null | grep -v "$WRAPPER" ; echo "$CRON_ENTRY" ) | crontab -
+# Add to crontab (avoid duplicates)
+( crontab -l 2>/dev/null | grep -v "$PYTHON_SCRIPT" ; echo "$CRON_ENTRY" ) | crontab -
 
-echo "[*] Cron job added to run daily at every hour at minute 59."
+echo "[*] Cron job added to run fetch.py daily at 23:59:59 using virtualenv."
