@@ -41,7 +41,7 @@ CRON_CMD="$REPO_DIR/auto_commit.sh"
 
 # Escape percent signs in cron
 ESCAPED_CMD=$(echo "$CRON_CMD" | sed 's/%/\\%/g')
-CRON_ENTRY="55 * * * * $ESCAPED_CMD >> $LOG_FILE 2>&1"
+CRON_ENTRY="06 * * * * $ESCAPED_CMD >> $LOG_FILE 2>&1"
 
 # === STEP 3: ADD CRON JOB TO RUN AUTOCOMMIT.SH ===
 ( crontab -l 2>/dev/null | grep -v "auto_commit.sh" ; echo "$CRON_ENTRY" ) | crontab -
