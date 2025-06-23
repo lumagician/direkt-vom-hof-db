@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "===== Run at $(date) =====" >> "$HOME/fetch.log"
+env >> "$HOME/fetch.log"
+whoami >> "$HOME/fetch.log"
+
 REPO_DIR="$HOME/direkt-vom-hof-db"
 VENV_DIR="$REPO_DIR/venv"
 PYTHON="$VENV_DIR/bin/python"
