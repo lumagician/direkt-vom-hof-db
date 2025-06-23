@@ -1,18 +1,21 @@
 #!/bin/bash
 
-# Navigate to the repo directory
-cd /home/pi/direkt-vom-hof-db || exit 1
+REPO_DIR="$HOME/direkt-vom-hof-db"
+VENV_DIR="$REPO_DIR/venv"
+PYTHON="$VENV_DIR/bin/python"
 
-# Git pull latest changes
+cd "$REPO_DIR" || exit 1
+
+# Pull latest changes
 git pull origin main
 
-# Run the Python script
-python3 fetch.py
+# Activate venv and run Python script
+source "$VENV_DIR/bin/activate"
+$PYTHON fetch.py
+deactivate
 
-# Stage any changes
+# Git commit & push
 git add .
-
-# Commit changes if there are any
 if ! git diff --cached --quiet; then
     git commit -m "Auto update: $(date)"
     git push origin main
