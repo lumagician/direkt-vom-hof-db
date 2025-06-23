@@ -52,7 +52,7 @@ EOF
 chmod +x "$WRAPPER"
 
 # === STEP 4: ADD CRON JOB ===
-CRON_ENTRY="59 59 * * * $WRAPPER >> $LOG_FILE 2>&1"
+CRON_ENTRY="59 * * * * $WRAPPER >> $LOG_FILE 2>&1"
 ( crontab -l 2>/dev/null | grep -v "$WRAPPER" ; echo "$CRON_ENTRY" ) | crontab -
 
-echo "[*] Cron job added to run daily at 23:59:59."
+echo "[*] Cron job added to run daily at every hour at minute 59."
