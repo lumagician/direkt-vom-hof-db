@@ -36,14 +36,13 @@ fi
 deactivate
 
 # === STEP 3: ADD CRON JOB TO RUN FETCH.PY IN VENV ===
-# Use full path to python in the venv
 CRON_CMD="$REPO_DIR/auto_commit.sh"
 
 # Escape percent signs in cron
 ESCAPED_CMD=$(echo "$CRON_CMD" | sed 's/%/\\%/g')
-CRON_ENTRY="10 * * * * $ESCAPED_CMD >> $LOG_FILE 2>&1"
+CRON_ENTRY="30 * * * * $ESCAPED_CMD >> $LOG_FILE 2>&1"
 
 # === STEP 3: ADD CRON JOB TO RUN AUTOCOMMIT.SH ===
 ( crontab -l 2>/dev/null | grep -v "auto_commit.sh" ; echo "$CRON_ENTRY" ) | crontab -
 
-echo "[*] Cron job added to run auto_commit.sh daily at 55 every hour."
+echo "[*] Cron job added to run auto_commit.sh daily at xx every hour."
